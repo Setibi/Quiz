@@ -26,3 +26,11 @@ footer {
     clear: both;
     display: block;
 }
+
+.right {
+    margin-left: 75%;
+}
+
+.left{
+    margin-left: 5%;
+}
