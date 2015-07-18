@@ -37,6 +37,26 @@ app.use(session());
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Tiempo de sesion en 10 segundos para hacer las pruebas
+app.use(function(req,res,next){
+        if(req.session.user){ // si estamos en una sesion
+            if(!req.session.tiempo){ // comienza la cuenta del tiempo
+                req.session.tiempo=(new Date()).getTime();
+                req.session.tiempo_max=10; // 10 segundos de plazo maximo de tiempo
+            }else{
+                if((new Date()).getTime()-req.session.tiempo > 10000){ // si se pasa del tiempo eliminamos sesion
+                    delete req.session.user;    // eliminacion de sesion de usuario
+                    delete req.session.tiempo; // eliminacion del tiempo
+                }else{ // si aun no se ha pasado el tiempo de sesion
+                    req.session.tiempo=(new Date()).getTime();
+                    req.session.tiempo_max=10; // 10 segundos de plazo de tiempo
+                }
+            }
+        }
+        next();
+    }
+);
+
 // Helpers dinamicos
 app.use(function(req,res,next){
 
